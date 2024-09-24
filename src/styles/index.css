@@ -1,0 +1,42 @@
+/* src/styles/index.css */
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0.5rem;
+  font-weight: normal;
+}
+
+html {
+  line-height: 1.2;
+  /* 禁止选中文本 */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  background-color: rgba(194, 194, 194, 0.131);
+  font-family: 'KaiTi', '楷体', 'STKaiti', 'SimSun', '黑体', 'Heiti SC', 'Arial', sans-serif;
+  color: #3e3e3e; 
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #222; 
+  font-family: 'KaiTi', '楷体';
+}
+
+/* 自定义 van-nav-bar的placeholder 样式 */
+.van-nav-bar__placeholder {
+  --van-nav-bar-background: #ecf9ff;
+  --van-nav-bar-title-text-color: #1989fa;
+}
+
+/* 自定义 Toast 样式 */
+.custom-toast {
+  --van-toast-text-color: #1989fa; /* 设置文字颜色 */
+  --van-toast-loading-icon-color: #1989fa; /* 设置图标颜色 */
+  --van-toast-background: #ecf9ff9d;
+}
