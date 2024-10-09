@@ -1,16 +1,28 @@
 <script setup lang="ts">
-const studentId = ref('')
-const emailPrefix = ref('') // 只输入邮箱前缀
-const password = ref('')
-const confirmPassword = ref('')
+import type { FieldRule, FieldRuleValidator } from 'vant' // 引入 FieldRule 和 FieldRuleValidator 类型
 
-// 验证规则
-const formRules = {
-  studentId: [
-    { required: true, message: '学号不能为空', trigger: 'onBlur' },
-    { pattern: /^\d{10}$/, message: '学号必须为10位数字', trigger: 'onBlur' }
+// 登录表单数据
+const loginCredential = ref('') // 学号或邮箱
+const password = ref('') // 密码
+
+// 表单验证规则
+const validateLoginCredential: FieldRuleValidator = (_, value) => {
+  // 学号必须为10位数字，或邮箱必须符合@ctbu.edu.cn格式
+  const isStudentId = /^\d{10}$/.test(value as string)
+  const isEmail = /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/.test(value as string)
+  return isStudentId || isEmail
+}
+
+// 表单规则类型定义
+const formRules: Record<string, FieldRule[]> = {
+  loginCredential: [
+    { required: true, message: '学号或邮箱不能为空', trigger: 'onBlur' },
+    {
+      validator: validateLoginCredential,
+      message: '请输入有效的学号或邮箱',
+      trigger: 'onBlur'
+    }
   ],
-  emailPrefix: [{ required: true, message: '邮箱不能为空', trigger: 'onBlur' }],
   password: [
     { required: true, message: '密码不能为空', trigger: 'onBlur' },
     {
@@ -21,61 +33,44 @@ const formRules = {
   ]
 }
 
-// 自定义密码确认验证
-const validatePasswords = () => {
-  if (!confirmPassword.value) {
-    showFailToast({ message: '请确认密码', position: 'top' })
-    return false
+// 登录提交逻辑
+const onSubmitLogin = () => {
+  if (!loginCredential.value || !password.value) {
+    showFailToast({ message: '学号/邮箱和密码不能为空', position: 'top' })
+    return
   }
-  if (password.value !== confirmPassword.value) {
-    showFailToast({
-      message: '两次输入的密码不一致',
-      position: 'top'
-    })
-    return false
-  }
-  return true
-}
 
-// 注册提交逻辑
-const onSubmitRegister = () => {
-  if (validatePasswords()) {
-    const fullEmail = `${emailPrefix.value}@ctbu.edu.cn` // 自动添加邮箱后缀
-    console.log(
-      '学号:',
-      studentId.value,
-      '邮箱:',
-      fullEmail,
-      '密码:',
-      password.value
-    )
-    showSuccessToast('注册成功')
-    // 注册成功后的逻辑，比如跳转到登录页面
+  // 校验输入的是否为有效的学号或邮箱格式
+  const isStudentId = /^\d{10}$/.test(loginCredential.value)
+  const isEmail = /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/.test(
+    loginCredential.value
+  )
+  if (!isStudentId && !isEmail) {
+    showFailToast({ message: '请输入有效的学号或邮箱', position: 'top' })
+    return
   }
+
+  console.log('学号/邮箱:', loginCredential.value, '密码:', password.value)
+  showSuccessToast('登录成功')
+  // 处理登录成功后的逻辑，比如跳转到主页
 }
 </script>
 
 <template>
-  <div class="register-container">
+  <div class="login-container">
     <img src="@/assets/images/透明队徽.png" alt="团队徽标" class="team-logo" />
-    <h1 class="title">注册新用户</h1>
+    <h1 class="title">欢迎您的使用</h1>
 
-    <van-form @submit="onSubmitRegister" class="form-background">
+    <van-form @submit="onSubmitLogin" class="form-background">
+      <!-- 学号或邮箱输入框 -->
       <van-field
-        v-model="studentId"
-        label="学号"
-        placeholder="请输入10位学号"
-        :rules="formRules.studentId"
+        v-model="loginCredential"
+        label="学号/邮箱"
+        placeholder="请输入学号或邮箱"
+        :rules="formRules.loginCredential"
         required
       />
-      <van-field
-        v-model="emailPrefix"
-        label="邮箱"
-        placeholder="请输入邮箱前缀"
-        :rules="formRules.emailPrefix"
-        required
-        suffix="@ctbu.edu.cn"
-      />
+      <!-- 密码输入框 -->
       <van-field
         v-model="password"
         label="密码"
@@ -84,29 +79,21 @@ const onSubmitRegister = () => {
         :rules="formRules.password"
         required
       />
-      <van-field
-        v-model="confirmPassword"
-        label="确认密码"
-        type="password"
-        placeholder="请再次输入密码"
-        required
-      />
       <van-button round block type="primary" native-type="submit">
-        注册
+        登录
       </van-button>
     </van-form>
 
     <p class="link-text">
-      已有账号？<router-link to="/login" class="router_link"
-        >去登录</router-link
+      没有账号？<router-link to="/register" class="router_link"
+        >去注册</router-link
       >
     </p>
   </div>
-  <Divider dividerText="人工智能学院 “小红帽”常青藤青年志愿者服务队" />
 </template>
 
 <style scoped>
-.register-container {
+.login-container {
   padding: 20px 20px;
   max-width: 400px;
   margin: 0px auto;
