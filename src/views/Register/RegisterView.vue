@@ -1,19 +1,30 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { showFailToast, showSuccessToast } from 'vant' // 引入 vant 提示函数
+import type { FieldRule } from 'vant' // 引入 FieldRule 类型定义
+
+// 定义响应式表单字段
 const studentId = ref('')
 const emailPrefix = ref('') // 只输入邮箱前缀
 const password = ref('')
 const confirmPassword = ref('')
 
 // 验证规则
-const formRules = {
+const formRules: Record<string, FieldRule[]> = {
   studentId: [
     { required: true, message: '学号不能为空', trigger: 'onBlur' },
-    { pattern: /^\d{10}$/, message: '学号必须为10位数字', trigger: 'onBlur' }
+    {
+      required: true,
+      pattern: /^\d{10}$/,
+      message: '学号必须为10位数字',
+      trigger: 'onBlur'
+    }
   ],
   emailPrefix: [{ required: true, message: '邮箱不能为空', trigger: 'onBlur' }],
   password: [
     { required: true, message: '密码不能为空', trigger: 'onBlur' },
     {
+      required: true,
       pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
       message: '密码至少8位，且必须包含大小写字母和数字',
       trigger: 'onBlur'
@@ -115,10 +126,11 @@ const onSubmitRegister = () => {
 .register-container {
   padding: 20px 20px;
   max-width: 400px;
-  margin: 0px auto;
-  background-color: hsl(0, 0%, 100%);
+  margin: 0 auto;
+  background-color: #fff;
   border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease; /* 增加动画效果 */
 }
 
 .team-logo {
@@ -160,5 +172,17 @@ const onSubmitRegister = () => {
 
 .router_link {
   color: #1989fa;
+}
+
+/* 定义动画效果 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

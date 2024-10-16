@@ -1,4 +1,4 @@
-import http from '@/utils/request'
+import http from '@/utils/http'
 
 // 重定向地址，获取 OAuth 登录的 URL
 export const oauthUrl = () => {
