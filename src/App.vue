@@ -1,5 +1,13 @@
 <script setup lang="ts">
+import { RobotVerification } from '@/app/RotatingVerification'
+import RotatingVerification from '@/components/RotatingVerification/index.vue'
+import { ref } from "vue";
 const route = useRoute()
+const RotatingVerificationHandler = ref<InstanceType<typeof RotatingVerification>>();
+
+onMounted(() => {
+  RobotVerification.initHandler(RotatingVerificationHandler.value)
+})
 </script>
 
 <template>
@@ -24,6 +32,8 @@ const route = useRoute()
         个人中心
       </van-tabbar-item>
     </van-tabbar>
+
+    <RotatingVerification ref="RotatingVerificationHandler" />
   </div>
 </template>
 

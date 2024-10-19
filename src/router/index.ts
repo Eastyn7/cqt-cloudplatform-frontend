@@ -23,6 +23,12 @@ const router = createRouter({
           path: '/notice',
           name: 'Notice',
           component: () => import('@/views/Notice/NoticeView.vue')
+        },
+        // 人机验证测试页面
+        {
+          path: '/test',
+          name: 'Test',
+          component: () => import('@/views/Demo/Robotverification.vue')
         }
       ]
     },

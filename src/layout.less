@@ -1,0 +1,57 @@
+// 垂直线性布局
+.layout_v{
+    display: flex;
+    flex-direction: column;
+    > *{
+        flex-shrink: 0;
+    }
+}
+
+// 横向线性布局
+.layout_h{
+    display: flex;
+    flex-direction: row;
+    > *{
+        flex-shrink: 0;
+    }
+}
+
+// 居中布局
+.layout_c{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    > *{
+        flex-shrink: 0;
+    }
+}
+
+// 垂直居中布局
+.layout_vc{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    > *{
+        flex-shrink: 0;
+    }
+}
+
+// 水平居中布局
+.layout_hc{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    > *{
+        flex-shrink: 0;
+    }
+
+}
+
+// 相对布局
+.layout_r{
+    position: relative;
+
+    > *{
+        position: absolute;
+    }
+}
