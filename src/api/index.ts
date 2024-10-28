@@ -1,8 +1,9 @@
 import auth from './auth'
-// import user from './user'
+import email from './email'
 
 const api = {
-  auth
+  auth,
+  email
 }
 
 export default api

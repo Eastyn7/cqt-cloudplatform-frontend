@@ -18,15 +18,15 @@ http.interceptors.request.use(
   (config: CustomRequestConfig) => {
     if (config.needToken) {
       if (isLogin()) {
-        const userinfo = getLocalData('userinfo')
-        if (userinfo) {
-          config.headers['Authorization'] = `Bearer ${userinfo.sk}`
+        const user = getLocalData('user')
+        if (user) {
+          config.headers['Authorization'] = `${user.token}`
         }
       } else if (getLocalData('token_expires_at')) {
-        removeLocalData('userinfo')
-        removeLocalData('token_expires_at')
-        // 提示用户登录已过期
-        console.warn('登录已过期，请重新登录')
+        // removeLocalData('userinfo')
+        // removeLocalData('token_expires_at')
+        // // 提示用户登录已过期
+        // console.warn('登录已过期，请重新登录')
       } else {
         // 提示用户先登录
         console.warn('请先登录')
