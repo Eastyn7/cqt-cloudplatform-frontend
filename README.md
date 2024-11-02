@@ -54,3 +54,7 @@ APP.vue 注册全局调用
 ### 首页白屏动画
 
 ![白屏动画](https://olrando.oss-cn-chengdu.aliyuncs.com/img/image-20241102130528000.png)
+
+### 权限设计
+
+权限组：按需求申请分配权限点
