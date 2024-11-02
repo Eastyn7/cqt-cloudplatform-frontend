@@ -38,7 +38,9 @@ pnpm build
 pnpm lint
 ```
 
-## 人机验证组件
+## Dawson
+
+### 人机验证组件
 
 UI：components/RotatingVerification
 model：app/RotatingVerification.ts
@@ -48,3 +50,7 @@ APP.vue 注册全局调用
 基建地址改为 http://voltest.olrando.cn
 
 访问： http://127.0.0.1:8080/test
+
+### 首页白屏动画
+
+![白屏动画](https://olrando.oss-cn-chengdu.aliyuncs.com/img/image-20241102130528000.png)
