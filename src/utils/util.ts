@@ -30,16 +30,20 @@ export const removeLocalData = (key: string) => {
 // 身份验证
 export const isLogin = (): boolean => {
   // 从本地存储中获取用户信息
-  const userinfo = getLocalData('userinfo')
+  const user = getLocalData('user')
   // 从本地存储中获取Token的过期时间
-  const tokenExpiresAt = getLocalData('token_expires_at')
+  // const tokenExpiresAt = getLocalData('token_expires_at')
 
-  // 检查用户信息和Token是否存在，且是否有有效的密钥（sk 字段）
-  if (userinfo?.sk && tokenExpiresAt) {
-    // 如果当前时间小于Token的过期时间，则说明Token未过期，返回true表示已登录
-    if (Date.now() < tokenExpiresAt) {
-      return true // 未过期
-    }
+  // // 检查用户信息和Token是否存在，且是否有有效的密钥（sk 字段）
+  // if (user.token && tokenExpiresAt) {
+  //   // 如果当前时间小于Token的过期时间，则说明Token未过期，返回true表示已登录
+  //   if (Date.now() < tokenExpiresAt) {
+  //     return true // 未过期
+  //   }
+  // }
+
+  if (user.token) {
+    return true
   }
 
   // 如果Token不存在或已过期，返回false表示未登录

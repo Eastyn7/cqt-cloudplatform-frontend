@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import type { FieldRule, FieldRuleValidator } from 'vant' // 引入 FieldRule 和 FieldRuleValidator 类型
+import type { FieldRule, FieldRuleValidator } from 'vant'
 import { formToJson } from '@/utils/formToJson'
-import api from '@/api/index'
+import { useUserStore } from '@/stores/index'
+import { useRouter } from 'vue-router'
 
-// 登录表单数据
 const loginInput = ref('') // 学号或邮箱
 const password = ref('') // 密码
+
+// 获取用户存储
+const userStore = useUserStore()
+
+// 使用 Vue Router
+const router = useRouter()
 
 // 表单验证规则
 const validateloginInput: FieldRuleValidator = () => {
@@ -16,8 +22,6 @@ const validateloginInput: FieldRuleValidator = () => {
   // 学号必须为10位数字，或邮箱必须符合 @ctbu.edu.cn 格式
   const isStudentId = /^\d{10}$/.test(inputValue)
   const isEmail = /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/.test(inputValue)
-  console.log('学号验证结果:', isStudentId)
-  console.log('邮箱验证结果:', isEmail)
 
   return isStudentId || isEmail // 返回验证结果
 }
@@ -28,7 +32,6 @@ const formRules: Record<string, FieldRule[]> = {
     { required: true, message: '学号或邮箱不能为空', trigger: 'onBlur' },
     {
       validator: validateloginInput,
-      // pattern: /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/,
       message: '请输入有效的学号或邮箱',
       trigger: 'onBlur'
     }
@@ -64,18 +67,22 @@ const onSubmitLogin = async () => {
   }
 
   const jsonData = formToJson(formData) // 调用转换函数
-  console.log('提交的数据:', jsonData) // 这里可以替换为你的请求逻辑
 
   try {
-    // 调用登录API
-    const response = await api.auth.login(loginInput.value, password.value)
-    console.log('登录成功:', response)
-    showSuccessToast('登录成功')
-    // 处理登录成功后的逻辑，比如跳转到主页
+    // 调用 Pinia 存储的 login 方法
+    await userStore.login(jsonData)
+    showSuccessToast({ message: '登录成功', position: 'top' })
+    router.push('/')
   } catch (error) {
     showFailToast({ message: '登录失败，请重试', position: 'top' })
   }
 }
+
+onMounted(() => {
+  if (userStore.userInfo.studentId) {
+    loginInput.value = userStore.userInfo.studentId
+  }
+})
 </script>
 
 <template>
@@ -123,6 +130,7 @@ const onSubmitLogin = async () => {
   background-color: hsl(0, 0%, 100%);
   border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease;
 }
 
 .team-logo {
@@ -153,5 +161,16 @@ const onSubmitLogin = async () => {
 
 .router_link {
   color: #1989fa;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

@@ -1,16 +1,31 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { showFailToast, showSuccessToast } from 'vant' // 引入 vant 提示函数
-import type { FieldRule } from 'vant' // 引入 FieldRule 类型定义
+import type { FieldRule } from 'vant'
+import { formToJson } from '@/utils/formToJson'
+import { useUserStore } from '@/stores/index'
+import { useRouter } from 'vue-router'
 
 // 定义响应式表单字段
-const studentId = ref('')
-const emailPrefix = ref('') // 只输入邮箱前缀
-const password = ref('')
-const confirmPassword = ref('')
+const formData = ref({
+  username: '',
+  studentId: '',
+  emailPrefix: '',
+  verificationCode: '', // 添加邮箱验证码字段
+  password: '',
+  confirmPassword: ''
+})
+
+// 获取用户存储
+const userStore = useUserStore()
+
+// 使用 Vue Router
+const router = useRouter()
 
 // 验证规则
 const formRules: Record<string, FieldRule[]> = {
+  username: [
+    { required: true, message: '真实姓名不能为空', trigger: 'onBlur' }
+  ],
   studentId: [
     { required: true, message: '学号不能为空', trigger: 'onBlur' },
     {
@@ -21,6 +36,9 @@ const formRules: Record<string, FieldRule[]> = {
     }
   ],
   emailPrefix: [{ required: true, message: '邮箱不能为空', trigger: 'onBlur' }],
+  verificationCode: [
+    { required: true, message: '验证码不能为空', trigger: 'onBlur' }
+  ],
   password: [
     { required: true, message: '密码不能为空', trigger: 'onBlur' },
     {
@@ -34,11 +52,11 @@ const formRules: Record<string, FieldRule[]> = {
 
 // 自定义密码确认验证
 const validatePasswords = () => {
-  if (!confirmPassword.value) {
+  if (!formData.value.confirmPassword) {
     showFailToast({ message: '请确认密码', position: 'top' })
     return false
   }
-  if (password.value !== confirmPassword.value) {
+  if (formData.value.password !== formData.value.confirmPassword) {
     showFailToast({
       message: '两次输入的密码不一致',
       position: 'top'
@@ -48,20 +66,66 @@ const validatePasswords = () => {
   return true
 }
 
+// 控制验证码按钮状态
+const isSendingCode = ref(false)
+const countdown = ref(60)
+
+const getVerificationCode = async () => {
+  const fullEmail = `${formData.value.emailPrefix}@ctbu.edu.cn`
+  const isEmail = /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/.test(fullEmail)
+  if (!isEmail) {
+    showFailToast({ message: '请输入有效的邮箱', position: 'top' })
+    return
+  }
+
+  isSendingCode.value = true
+  countdown.value = 60
+
+  try {
+    const jsonData = formToJson({ email: fullEmail })
+    await userStore.sendVerificationCode(jsonData)
+    showSuccessToast({ message: '验证码已发送', position: 'top' })
+
+    // 开始倒计时
+    const interval = setInterval(() => {
+      countdown.value--
+      if (countdown.value <= 0) {
+        clearInterval(interval)
+        isSendingCode.value = false
+      }
+    }, 1000)
+  } catch (error) {
+    showFailToast({ message: '发送验证码失败', position: 'top' })
+    isSendingCode.value = false
+  }
+}
+
 // 注册提交逻辑
-const onSubmitRegister = () => {
+const onSubmitRegister = async () => {
   if (validatePasswords()) {
-    const fullEmail = `${emailPrefix.value}@ctbu.edu.cn` // 自动添加邮箱后缀
-    console.log(
-      '学号:',
-      studentId.value,
-      '邮箱:',
-      fullEmail,
-      '密码:',
-      password.value
-    )
-    showSuccessToast('注册成功')
-    // 注册成功后的逻辑，比如跳转到登录页面
+    const fullEmail = `${formData.value.emailPrefix}@ctbu.edu.cn`
+    const isEmail = /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/.test(fullEmail)
+    if (!isEmail) {
+      showFailToast({ message: '请输入有效的邮箱', position: 'top' })
+      return
+    }
+
+    const reqData = {
+      username: formData.value.username,
+      student_id: formData.value.studentId,
+      email: fullEmail,
+      verificationCode: formData.value.verificationCode,
+      password: formData.value.password
+    }
+
+    const jsonData = formToJson(reqData)
+    try {
+      await userStore.register(jsonData)
+      showSuccessToast({ message: '注册成功', position: 'top' })
+      router.push('/login')
+    } catch (error: any) {
+      showFailToast({ message: error.response.data.message, position: 'top' })
+    }
   }
 }
 </script>
@@ -73,14 +137,21 @@ const onSubmitRegister = () => {
 
     <van-form @submit="onSubmitRegister" class="form-background">
       <van-field
-        v-model="studentId"
+        v-model="formData.username"
+        label="真实姓名"
+        placeholder="请输入真实姓名（无法更改）"
+        :rules="formRules.username"
+        required
+      />
+      <van-field
+        v-model="formData.studentId"
         label="学号"
         placeholder="请输入10位学号"
         :rules="formRules.studentId"
         required
       />
       <van-field
-        v-model="emailPrefix"
+        v-model="formData.emailPrefix"
         label="邮箱"
         placeholder="请输入邮箱前缀"
         :rules="formRules.emailPrefix"
@@ -94,7 +165,26 @@ const onSubmitRegister = () => {
         </template>
       </van-field>
       <van-field
-        v-model="password"
+        v-model="formData.verificationCode"
+        label="验证码"
+        placeholder="请输入邮箱验证码"
+        :rules="formRules.verificationCode"
+        required
+        class="verification_code_field"
+      >
+        <template #button>
+          <van-button
+            size="small"
+            type="primary"
+            :disabled="isSendingCode"
+            @click="getVerificationCode"
+          >
+            {{ isSendingCode ? `${countdown}秒` : '获取验证码' }}
+          </van-button>
+        </template>
+      </van-field>
+      <van-field
+        v-model="formData.password"
         label="密码"
         type="password"
         placeholder="请输入密码"
@@ -102,15 +192,15 @@ const onSubmitRegister = () => {
         required
       />
       <van-field
-        v-model="confirmPassword"
+        v-model="formData.confirmPassword"
         label="确认密码"
         type="password"
         placeholder="请再次输入密码"
         required
       />
-      <van-button round block type="primary" native-type="submit">
-        注册
-      </van-button>
+      <van-button round block type="primary" native-type="submit"
+        >注册</van-button
+      >
     </van-form>
 
     <p class="link-text">
@@ -130,7 +220,7 @@ const onSubmitRegister = () => {
   background-color: #fff;
   border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.5s ease; /* 增加动画效果 */
+  animation: fadeIn 0.5s ease;
 }
 
 .team-logo {
@@ -144,11 +234,13 @@ const onSubmitRegister = () => {
   margin: 0px 0px 10px 0;
 }
 
-.mail_field {
+.mail_field,
+.verification_code_field {
   position: relative;
 }
 
-.mail_button {
+.mail_button,
+.verification_button {
   position: absolute;
   right: 0;
   top: 50%;
@@ -174,7 +266,6 @@ const onSubmitRegister = () => {
   color: #1989fa;
 }
 
-/* 定义动画效果 */
 @keyframes fadeIn {
   0% {
     opacity: 0;

@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import { useUserStore } from '@/stores'
+
+const userStore = useUserStore()
+
 // 用户的个人信息
 const userInfo = ref({
   avatar: '', // 用户头像
-  username: '用户名',
-  realName: '张三', // 真实姓名，不能修改
+  nickname: '用户名',
+  username: '张三', // 真实姓名，不能修改
   studentId: '20230001', // 学号，不能修改
   phone: '12345678901',
   email: 'example@example.com',
@@ -31,6 +35,10 @@ const uploadAvatar = (e: Event) => {
     showToast('头像上传成功')
   }
 }
+
+onMounted(() => {
+  userInfo.value = { ...userStore.userInfo }
+})
 </script>
 
 <template>
@@ -62,7 +70,7 @@ const uploadAvatar = (e: Event) => {
     <van-cell-group>
       <!-- 用户名 -->
       <van-field
-        v-model="userInfo.username"
+        v-model="userInfo.nickname"
         label="用户名"
         :disabled="!isEditing"
         :input-align="'left'"
@@ -70,7 +78,7 @@ const uploadAvatar = (e: Event) => {
 
       <!-- 真实姓名（不可修改） -->
       <van-field
-        v-model="userInfo.realName"
+        v-model="userInfo.username"
         label="真实姓名"
         :disabled="true"
         :input-align="'left'"
