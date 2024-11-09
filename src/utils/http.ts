@@ -18,7 +18,7 @@ http.interceptors.request.use(
   (config: CustomRequestConfig) => {
     if (config.needToken) {
       if (isLogin()) {
-        const user = getLocalData('user')
+        const user = getLocalData('cqt-user')
         if (user) {
           config.headers['Authorization'] = `${user.token}`
         }
