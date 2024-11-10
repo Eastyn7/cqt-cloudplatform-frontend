@@ -5,7 +5,7 @@ import { formToJson } from '@/utils/formToJson'
 
 type Gender = 0 | 1 | 2 // 0: 保密, 1: 男, 2: 女
 
-interface UserInfo {
+export interface UserInfo {
   auth_id: number
   studentId: string
   email: string
@@ -39,6 +39,7 @@ export const useUserStore = defineStore(StoreNames.USER, {
   persist: true,
 
   actions: {
+    // 注册
     async register(data: string) {
       try {
         const result = await api.auth.register(data)
@@ -51,7 +52,7 @@ export const useUserStore = defineStore(StoreNames.USER, {
         throw error
       }
     },
-
+    // 登录
     async login(data: string) {
       try {
         const result = await api.auth.login(data)
@@ -75,7 +76,7 @@ export const useUserStore = defineStore(StoreNames.USER, {
         throw error
       }
     },
-
+    // 获取信息
     async getUserInfo(data: string) {
       try {
         const result = await api.auth.getAuthInfo(data)
@@ -89,7 +90,7 @@ export const useUserStore = defineStore(StoreNames.USER, {
         throw error
       }
     },
-
+    // 发送邮箱验证码
     async sendVerificationCode(data: string) {
       try {
         const response = await api.email.sendVerificationCode(data)
@@ -99,7 +100,22 @@ export const useUserStore = defineStore(StoreNames.USER, {
         throw error
       }
     },
+    // 更新信息
+    async updateAuthInfo(data: string) {
+      try {
+        const result = await api.auth.updateAuthInfo(data)
 
+        if (result.status) {
+          // 更新成功，重新获取最新的用户信息
+          const jsonData = formToJson({ auth_id: this.userInfo.auth_id })
+          await this.getUserInfo(jsonData)
+        }
+      } catch (error) {
+        console.error('更新用户信息失败', error)
+        throw error
+      }
+    },
+    // 退出登录
     logOut() {
       this.token = ''
       this.tokenExpiresAt = 0

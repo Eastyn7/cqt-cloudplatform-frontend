@@ -1,38 +1,114 @@
 <script setup lang="ts">
+import { formToJson } from '@/utils/formToJson'
 import { useUserStore } from '@/stores'
+import type { UserInfo } from '@/stores'
 
 const userStore = useUserStore()
 
-// 用户的个人信息
-const userInfo = ref({
-  avatar: '', // 用户头像
-  nickname: '用户名',
-  username: '张三', // 真实姓名，不能修改
-  studentId: '20230001', // 学号，不能修改
-  phone: '12345678901',
-  email: 'example@example.com',
-  gender: 0, // 性别：0 = 不填写，1 = 男，2 = 女
+const userInfo = ref<UserInfo>({
+  auth_id: 0,
+  studentId: '默认ID',
+  email: '默认邮箱',
+  nickname: '昵称',
+  username: '姓名',
+  gender: 0,
+  avatar: '',
+  phone: '默认电话',
   bio: '这是我的个人简介。'
 })
 
-const isEditing = ref(false) // 标记是否处于编辑模式
+// @ts-ignore
+const originalUserInfo = ref<UserInfo>({})
+const isEditing = ref(false)
 
-// 进入编辑模式
 const startEditing = () => {
   isEditing.value = true
+  originalUserInfo.value = { ...userInfo.value }
 }
 
-// 提交修改
-const saveChanges = () => {
+const saveChanges = async () => {
   isEditing.value = false
+
+  const updates: Partial<UserInfo> = {}
+
+  for (const key in userInfo.value) {
+    const typedKey = key as keyof UserInfo
+    if (userInfo.value[typedKey] !== originalUserInfo.value[typedKey]) {
+      // @ts-ignore
+      updates[typedKey] = userInfo.value[typedKey]
+    }
+  }
+
+  if (Object.keys(updates).length > 0) {
+    try {
+      await userStore.updateAuthInfo(
+        formToJson({ auth_id: userInfo.value.auth_id, updates })
+      )
+      showToast('信息更新成功')
+      originalUserInfo.value = { ...userInfo.value }
+    } catch (error) {
+      console.error('更新信息失败', error)
+      userInfo.value = { ...originalUserInfo.value }
+      showToast('更新信息失败，请重试')
+    }
+  } else {
+    showToast('没有修改任何信息')
+  }
 }
 
-// 上传头像
-const uploadAvatar = (e: Event) => {
+// 压缩图片函数
+const compressImage = (
+  file: File,
+  maxWidth = 800,
+  quality = 0.7
+): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = (event) => {
+      const img = new Image()
+      img.src = event.target?.result as string
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')!
+
+        let width = img.width
+        let height = img.height
+
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width
+          width = maxWidth
+        }
+
+        canvas.width = width
+        canvas.height = height
+        ctx.drawImage(img, 0, 0, width, height)
+
+        // 压缩图片质量
+        const compressedBase64 = canvas.toDataURL('image/jpeg', quality)
+        resolve(compressedBase64)
+      }
+
+      img.onerror = (error) => reject(error)
+    }
+
+    reader.onerror = (error) => reject(error)
+  })
+}
+
+const uploadAvatar = async (e: Event) => {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (file) {
-    userInfo.value.avatar = URL.createObjectURL(file)
-    showToast('头像上传成功')
+    try {
+      // 压缩图片
+      const compressedBase64 = await compressImage(file)
+      userInfo.value.avatar = compressedBase64
+      showToast('头像压缩并上传成功')
+    } catch (error) {
+      console.error('头像上传失败', error)
+      showToast('头像上传失败，请重试')
+    }
   }
 }
 
@@ -102,12 +178,13 @@ onMounted(() => {
         :input-align="'left'"
       />
 
-      <!-- 邮箱 -->
+      <!-- 邮箱（不可修改） -->
       <van-field
         v-model="userInfo.email"
         label="邮箱"
-        :disabled="!isEditing"
+        :disabled="true"
         :input-align="'left'"
+        :class="isEditing ? 'disabled-field' : ''"
       />
 
       <!-- 性别 -->

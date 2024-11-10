@@ -36,5 +36,6 @@ export const isLogin = (): boolean => {
     return true // 登录有效
   }
 
-  return false // 未登录或已过期
+  // 如果Token不存在或已过期，返回false表示未登录
+  return false
 }

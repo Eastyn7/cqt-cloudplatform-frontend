@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import index_Routes from './index_Routes'
 import login_register_Routes from './login_register_Routes'
+import { isLogin } from '@/utils/util'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -33,7 +34,7 @@ const router = createRouter({
       ]
     },
     ...login_register_Routes, // 登录注册功能界面
-    ...index_Routes //基础功能页面
+    ...index_Routes // 基础功能页面
   ]
 })
 
@@ -48,12 +49,26 @@ router.beforeEach((to, from, next) => {
     })
   }
 
+  const unprotectedPaths = [
+    '/home',
+    '/user',
+    '/notice',
+    '/login',
+    '/register',
+    '/aboutus',
+    '/activities'
+  ]
+
+  // 判断是否需要登录验证
+  if (!unprotectedPaths.includes(to.path) && !isLogin()) {
+    return next('/login')
+  }
+
   // 检查目标路径是否为 '/notice' 或 '/user'
-  if (['/notice', '/user'].includes(to.fullPath)) {
+  if (['/notice', '/user'].includes(to.path)) {
     showLoadingToast('加载中...')
 
     nextTick(() => {
-      // closeToast()
       next()
     })
   } else {

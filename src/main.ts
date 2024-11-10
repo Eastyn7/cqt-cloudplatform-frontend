@@ -9,7 +9,7 @@ import App from './App.vue'
 import router from './router'
 import pinia from './stores'
 import { Lazyload } from 'vant'
-import './layout.less'; // 引入flex常见布局
+import './layout.less' // 引入flex常见布局
 
 const app = createApp(App)
 
