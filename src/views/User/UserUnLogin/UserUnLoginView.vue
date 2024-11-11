@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+// 使用 Vue Router
+const router = useRouter()
+
 const menuItems = [
   {
     icon: ' icon-personal-data',
@@ -27,10 +32,7 @@ const menuItems = [
 ]
 
 const login = () => {
-  showToast({
-    message: '正在开发中...',
-    position: 'top'
-  })
+  router.push('/login')
 }
 
 const toastFn = () => {
@@ -39,6 +41,14 @@ const toastFn = () => {
     position: 'top'
   })
 }
+
+const handleLinkClick = (routerLink: string) => {
+  if (routerLink !== '/operatingguide') {
+    toastFn() // 其他链接都提示登录
+  } else {
+    router.push(routerLink) // 使用指南不需要登录
+  }
+}
 </script>
 
 <template>
@@ -46,7 +56,7 @@ const toastFn = () => {
     <div class="defaultProfile" @click="login">
       <div class="defaultAvatar">
         <van-icon
-          name=" icon-default-avatar"
+          name=" icon-volunteer-avatar"
           class-prefix="iconfont"
           size="80"
         />
@@ -55,7 +65,11 @@ const toastFn = () => {
     </div>
     <div class="defaultSection">
       <ul>
-        <li v-for="item in menuItems" :key="item.text" @click="toastFn()">
+        <li
+          v-for="item in menuItems"
+          :key="item.text"
+          @click="handleLinkClick(item.routerLink)"
+        >
           <router-link :to="item.routerLink" class="menuLink">
             <van-icon
               :name="item.icon"

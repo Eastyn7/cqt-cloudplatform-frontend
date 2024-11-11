@@ -56,7 +56,8 @@ router.beforeEach((to, from, next) => {
     '/login',
     '/register',
     '/aboutus',
-    '/activities'
+    '/activities',
+    '/operatingguide'
   ]
 
   // 判断是否需要登录验证
