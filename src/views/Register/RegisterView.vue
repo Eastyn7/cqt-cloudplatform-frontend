@@ -53,13 +53,18 @@ const formRules: Record<string, FieldRule[]> = {
 // 自定义密码确认验证
 const validatePasswords = () => {
   if (!formData.value.confirmPassword) {
-    showFailToast({ message: '请确认密码', position: 'top' })
+    showFailToast({
+      message: '请确认密码',
+      position: 'top',
+      className: 'custom-fail-toast'
+    })
     return false
   }
   if (formData.value.password !== formData.value.confirmPassword) {
     showFailToast({
       message: '两次输入的密码不一致',
-      position: 'top'
+      position: 'top',
+      className: 'custom-fail-toast'
     })
     return false
   }
@@ -74,7 +79,11 @@ const getVerificationCode = async () => {
   const fullEmail = `${formData.value.emailPrefix}@ctbu.edu.cn`
   const isEmail = /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/.test(fullEmail)
   if (!isEmail) {
-    showFailToast({ message: '请输入有效的邮箱', position: 'top' })
+    showFailToast({
+      message: '请输入有效的邮箱',
+      position: 'top',
+      className: 'custom-fail-toast'
+    })
     return
   }
 
@@ -84,7 +93,11 @@ const getVerificationCode = async () => {
   try {
     const jsonData = formToJson({ email: fullEmail })
     await userStore.sendVerificationCode(jsonData)
-    showSuccessToast({ message: '验证码已发送', position: 'top' })
+    showSuccessToast({
+      message: '验证码已发送',
+      position: 'top',
+      className: 'custom-normal-toast'
+    })
 
     // 开始倒计时
     const interval = setInterval(() => {
@@ -95,7 +108,11 @@ const getVerificationCode = async () => {
       }
     }, 1000)
   } catch (error) {
-    showFailToast({ message: '发送验证码失败', position: 'top' })
+    showFailToast({
+      message: '发送验证码失败',
+      position: 'top',
+      className: 'custom-fail-toast'
+    })
     isSendingCode.value = false
   }
 }
@@ -106,7 +123,11 @@ const onSubmitRegister = async () => {
     const fullEmail = `${formData.value.emailPrefix}@ctbu.edu.cn`
     const isEmail = /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/.test(fullEmail)
     if (!isEmail) {
-      showFailToast({ message: '请输入有效的邮箱', position: 'top' })
+      showFailToast({
+        message: '请输入有效的邮箱',
+        position: 'top',
+        className: 'custom-fail-toast'
+      })
       return
     }
 
@@ -121,10 +142,18 @@ const onSubmitRegister = async () => {
     const jsonData = formToJson(reqData)
     try {
       await userStore.register(jsonData)
-      showSuccessToast({ message: '注册成功', position: 'top' })
+      showSuccessToast({
+        message: '注册成功',
+        position: 'top',
+        className: 'custom-normal-toast'
+      })
       router.push('/login')
     } catch (error: any) {
-      showFailToast({ message: error.response.data.message, position: 'top' })
+      showFailToast({
+        message: error.response.data.message,
+        position: 'top',
+        className: 'custom-fail-toast'
+      })
     }
   }
 }

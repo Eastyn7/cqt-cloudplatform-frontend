@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
       message,
       duration: 1000,
       forbidClick: true,
-      className: 'custom-toast' // 自定义类名
+      className: 'custom-normal-toast' // 自定义类名
     })
   }
 

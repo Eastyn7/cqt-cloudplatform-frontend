@@ -117,21 +117,27 @@ export const useUserStore = defineStore(StoreNames.USER, {
     },
     // 退出登录
     logOut() {
-      this.token = ''
-      this.tokenExpiresAt = 0
-      this.isAdmin = false
-      this.Permission = ''
-      this.userInfo = {
-        auth_id: 0,
-        studentId: '',
-        email: '',
-        nickname: '',
-        username: '',
-        gender: 0,
-        avatar: '',
-        phone: '',
-        bio: ''
-      }
+      // 清空 Pinia store 中的所有相关信息
+      // this.token = ''
+      // this.tokenExpiresAt = 0
+      // this.isAdmin = false
+      // this.Permission = ''
+      // this.userInfo = {
+      //   auth_id: 0,
+      //   studentId: '',
+      //   email: '',
+      //   nickname: '',
+      //   username: '',
+      //   gender: 0,
+      //   avatar: '',
+      //   phone: '',
+      //   bio: ''
+      // }
+
+      // 清除 localStorage 中保存的 'cqt-user' 键和值
+      localStorage.removeItem('cqt-user')
+
+      // 强制刷新页面，确保状态更新
       location.reload()
     }
   }

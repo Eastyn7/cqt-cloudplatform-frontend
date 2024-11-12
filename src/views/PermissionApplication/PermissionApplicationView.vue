@@ -56,7 +56,11 @@ const formRules: Record<string, FieldRule[]> = {
 
 // 提交处理
 const onSubmit = () => {
-  showToast('提交成功')
+  showSuccessToast({
+    message: '提交成功',
+    position: 'top',
+    className: 'custom-normal-toast'
+  })
 }
 
 // 选择确认事件处理

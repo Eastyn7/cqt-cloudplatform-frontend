@@ -38,7 +38,8 @@ const login = () => {
 const toastFn = () => {
   showToast({
     message: '请登录之后再使用',
-    position: 'top'
+    position: 'top',
+    className: 'custom-normal-toast'
   })
 }
 

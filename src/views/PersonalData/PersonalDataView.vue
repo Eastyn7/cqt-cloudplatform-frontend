@@ -44,15 +44,27 @@ const saveChanges = async () => {
       await userStore.updateAuthInfo(
         formToJson({ auth_id: userInfo.value.auth_id, updates })
       )
-      showToast('信息更新成功')
+      showSuccessToast({
+        message: '信息更新成功',
+        position: 'top',
+        className: 'custom-normal-toast'
+      })
       originalUserInfo.value = { ...userInfo.value }
     } catch (error) {
       console.error('更新信息失败', error)
       userInfo.value = { ...originalUserInfo.value }
-      showToast('更新信息失败，请重试')
+      showFailToast({
+        message: '更新信息失败，请重试',
+        position: 'top',
+        className: 'custom-fail-toast'
+      })
     }
   } else {
-    showToast('没有修改任何信息')
+    showFailToast({
+      message: '没有修改任何信息',
+      position: 'top',
+      className: 'custom-fail-toast'
+    })
   }
 }
 
@@ -104,10 +116,18 @@ const uploadAvatar = async (e: Event) => {
       // 压缩图片
       const compressedBase64 = await compressImage(file)
       userInfo.value.avatar = compressedBase64
-      showToast('头像压缩并上传成功')
+      showSuccessToast({
+        message: '头像压缩并上传成功',
+        position: 'top',
+        className: 'custom-normal-toast'
+      })
     } catch (error) {
       console.error('头像上传失败', error)
-      showToast('头像上传失败，请重试')
+      showFailToast({
+        message: '头像上传失败，请重试',
+        position: 'top',
+        className: 'custom-fail-toast'
+      })
     }
   }
 }
