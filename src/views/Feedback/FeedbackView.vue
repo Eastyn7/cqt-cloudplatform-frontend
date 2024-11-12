@@ -59,7 +59,11 @@ const onSubmit = () => {
   } else {
     console.log('实名提交反馈')
   }
-  showToast('提交成功')
+  showSuccessToast({
+    message: '提交成功',
+    position: 'top',
+    className: 'custom-normal-toast'
+  })
 }
 
 // 监听匿名开关状态变化，实时更新验证规则

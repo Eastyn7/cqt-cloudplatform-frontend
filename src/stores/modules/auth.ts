@@ -1,28 +1,22 @@
 import { defineStore } from 'pinia'
-// 枚举
 import { StoreNames } from './store_names'
-// API 接口
 import api from '@/api/index'
-
 import { formToJson } from '@/utils/formToJson'
 
-// 性别类型
 type Gender = 0 | 1 | 2 // 0: 保密, 1: 男, 2: 女
 
-// 用户信息接口
-interface UserInfo {
-  auth_id: number // 用户认证ID
-  studentId: string // 学号
-  email: string // 邮箱
-  nickname: string // 用户名
-  username: string // 真实姓名
-  gender: Gender // 性别：0保密，1男，2女
-  avatar: string // 用户头像
-  phone: string // 电话
-  bio: string // 个人简介
+export interface UserInfo {
+  auth_id: number
+  studentId: string
+  email: string
+  nickname: string
+  username: string
+  gender: Gender
+  avatar: string
+  phone: string
+  bio: string
 }
 
-// 定义用户存储
 export const useUserStore = defineStore(StoreNames.USER, {
   state: () => ({
     userInfo: <UserInfo>{
@@ -37,6 +31,7 @@ export const useUserStore = defineStore(StoreNames.USER, {
       bio: ''
     },
     token: '',
+    tokenExpiresAt: 0,
     isAdmin: false,
     Permission: ''
   }),
@@ -44,7 +39,7 @@ export const useUserStore = defineStore(StoreNames.USER, {
   persist: true,
 
   actions: {
-    // 注册逻辑
+    // 注册
     async register(data: string) {
       try {
         const result = await api.auth.register(data)
@@ -54,15 +49,15 @@ export const useUserStore = defineStore(StoreNames.USER, {
         this.userInfo.email = email
       } catch (error) {
         console.error('注册失败', error)
-        throw error // 继续抛出错误以便在调用处处理
+        throw error
       }
     },
-
-    // 登录并存储数据
+    // 登录
     async login(data: string) {
       try {
         const result = await api.auth.login(data)
-        const { auth_id, student_id, email, token } = result.data.auth
+        const { auth_id, student_id, email, token, expiresIn } =
+          result.data.auth
 
         // 存储 token 和用户认证信息
         this.token = token
@@ -70,16 +65,18 @@ export const useUserStore = defineStore(StoreNames.USER, {
         this.userInfo.studentId = student_id
         this.userInfo.email = email
 
+        // 计算 token 的过期时间
+        this.tokenExpiresAt = Date.now() + expiresIn * 1000
+
         // 登录成功后获取用户信息
         const jsonData = formToJson({ auth_id })
-        await this.getUserInfo(jsonData) // 传入 auth_id 以获取用户基本信息
+        await this.getUserInfo(jsonData)
       } catch (error) {
         console.error('登录失败', error)
-        throw error // 继续抛出错误以便在调用处处理
+        throw error
       }
     },
-
-    // 获取用户信息
+    // 获取信息
     async getUserInfo(data: string) {
       try {
         const result = await api.auth.getAuthInfo(data)
@@ -90,36 +87,58 @@ export const useUserStore = defineStore(StoreNames.USER, {
         }
       } catch (error) {
         console.error('获取用户信息失败', error)
-        throw error // 继续抛出错误以便在调用处处理
+        throw error
       }
     },
-
-    // 发送验证码逻辑
+    // 发送邮箱验证码
     async sendVerificationCode(data: string) {
       try {
         const response = await api.email.sendVerificationCode(data)
-        return response // 可以返回响应以便在调用处处理
+        return response
       } catch (error) {
         console.error('发送验证码失败', error)
-        throw error // 继续抛出错误以便在调用处处理
+        throw error
       }
     },
+    // 更新信息
+    async updateAuthInfo(data: string) {
+      try {
+        const result = await api.auth.updateAuthInfo(data)
 
+        if (result.status) {
+          // 更新成功，重新获取最新的用户信息
+          const jsonData = formToJson({ auth_id: this.userInfo.auth_id })
+          await this.getUserInfo(jsonData)
+        }
+      } catch (error) {
+        console.error('更新用户信息失败', error)
+        throw error
+      }
+    },
     // 退出登录
     logOut() {
-      this.token = ''
-      this.userInfo = {
-        auth_id: 0,
-        studentId: '',
-        email: '',
-        nickname: '',
-        username: '',
-        gender: 0,
-        avatar: '',
-        phone: '',
-        bio: ''
-      }
-      location.reload() // 刷新页面以清理状态
+      // 清空 Pinia store 中的所有相关信息
+      // this.token = ''
+      // this.tokenExpiresAt = 0
+      // this.isAdmin = false
+      // this.Permission = ''
+      // this.userInfo = {
+      //   auth_id: 0,
+      //   studentId: '',
+      //   email: '',
+      //   nickname: '',
+      //   username: '',
+      //   gender: 0,
+      //   avatar: '',
+      //   phone: '',
+      //   bio: ''
+      // }
+
+      // 清除 localStorage 中保存的 'cqt-user' 键和值
+      localStorage.removeItem('cqt-user')
+
+      // 强制刷新页面，确保状态更新
+      location.reload()
     }
   }
 })

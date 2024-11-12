@@ -49,14 +49,22 @@ const formRules: Record<string, FieldRule[]> = {
 // 登录提交逻辑
 const onSubmitLogin = async () => {
   if (!loginInput.value || !password.value) {
-    showFailToast({ message: '学号/邮箱和密码不能为空', position: 'top' })
+    showFailToast({
+      message: '学号/邮箱和密码不能为空',
+      position: 'top',
+      className: 'custom-fail-toast'
+    })
     return
   }
 
   const isStudentId = /^\d{10}$/.test(loginInput.value)
   const isEmail = /^[a-zA-Z0-9._%+-]+@ctbu\.edu\.cn$/.test(loginInput.value)
   if (!isStudentId && !isEmail) {
-    showFailToast({ message: '请输入有效的学号或邮箱', position: 'top' })
+    showFailToast({
+      message: '请输入有效的学号或邮箱',
+      position: 'top',
+      className: 'custom-fail-toast'
+    })
     return
   }
 
@@ -71,10 +79,18 @@ const onSubmitLogin = async () => {
   try {
     // 调用 Pinia 存储的 login 方法
     await userStore.login(jsonData)
-    showSuccessToast({ message: '登录成功', position: 'top' })
+    showSuccessToast({
+      message: '登录成功',
+      position: 'top',
+      className: 'custom-normal-toast'
+    })
     router.push('/')
   } catch (error) {
-    showFailToast({ message: '登录失败，请重试', position: 'top' })
+    showFailToast({
+      message: '登录失败，请重试',
+      position: 'top',
+      className: 'custom-fail-toast'
+    })
   }
 }
 

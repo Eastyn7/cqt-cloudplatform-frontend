@@ -1,4 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useUserStore } from '@/stores'
+
+const userStore = useUserStore()
+
+const username = computed(() => userStore.userInfo.nickname || '帅哥/美女') // 如果 nickname 存在则使用 nickname，否则显示默认值
+const avatarUrl = computed(() => userStore.userInfo.avatar || '') // 获取头像的 URL
+
 const menuItems = [
   {
     icon: ' icon-personal-data',
@@ -26,20 +34,17 @@ const menuItems = [
   }
 ]
 
-// 用户名【应当通过企业微信登录之后来确定】
-const username = '帅哥/美女'
-
 // 设置问候语
 const greeting = computed(() => {
   const hour = new Date().getHours()
   if (hour >= 6 && hour < 11) {
-    return `早上好, ${username}`
+    return `早上好, ${username.value}`
   } else if (hour >= 11 && hour < 13) {
-    return `中午好, ${username}`
+    return `中午好, ${username.value}`
   } else if (hour >= 13 && hour < 18) {
-    return `下午好, ${username}`
+    return `下午好, ${username.value}`
   } else {
-    return `晚上好, ${username}`
+    return `晚上好, ${username.value}`
   }
 })
 </script>
@@ -48,9 +53,11 @@ const greeting = computed(() => {
   <div class="container">
     <div class="defaultProfile">
       <div class="defaultAvatar">
+        <img v-if="avatarUrl" :src="avatarUrl" alt="头像" class="avatar-img" />
         <van-icon
+          v-else
           name=" icon-volunteer-avatar"
-          class-prefix="iconfont"
+          class-prefix="iconfont avatar-img"
           size="80"
         />
         <div class="defaultText">{{ greeting }}</div>
@@ -83,6 +90,13 @@ const greeting = computed(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.defaultProfile .avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 0 20px 0;
 }
 
 .defaultSection {

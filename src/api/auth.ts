@@ -40,6 +40,19 @@ const getAuthInfo = async (data: string, needToken = true) => {
   }
 }
 
+// 更新用户信息请求
+const updateAuthInfo = async (data: string, needToken = true) => {
+  try {
+    const response = await http.put('/auth/updateauthinfo', data, {
+      needToken
+    } as CustomRequestConfig)
+    return response
+  } catch (error) {
+    console.error('更新用户信息请求失败:', error)
+    throw error
+  }
+}
+
 /**
  * 请求验证图片
  */
@@ -60,7 +73,7 @@ const getVerifyImg = async () => {
  * @param key key是用户的唯一标识 token/session
  */
 
-const verifyAnswer = async (data: { angle: string, key: string }) => {
+const verifyAnswer = async (data: { angle: string; key: string }) => {
   const { angle, key } = data
   try {
     const response = await http.post('/verify', {
@@ -79,7 +92,8 @@ const verifyAnswer = async (data: { angle: string, key: string }) => {
 export default {
   login,
   register,
+  getAuthInfo,
+  updateAuthInfo,
   getVerifyImg,
-  verifyAnswer,
-  getAuthInfo
+  verifyAnswer
 }

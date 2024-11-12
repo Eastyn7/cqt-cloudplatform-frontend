@@ -35,8 +35,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 自定义 Toast 样式 */
-.custom-toast {
+.custom-normal-toast {
   --van-toast-text-color: #1989fa; /* 设置文字颜色 */
   --van-toast-loading-icon-color: #1989fa; /* 设置图标颜色 */
   --van-toast-background: #ecf9ff9d;
+}
+
+.custom-fail-toast {
+  --van-toast-text-color: #fa1919; /* 设置文字颜色 */
+  --van-toast-loading-icon-color: #fa1919; /* 设置图标颜色 */
+  --van-toast-background: #ffecec9d;
 }
