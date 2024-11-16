@@ -215,9 +215,9 @@ onMounted(() => {
             v-model="userInfo.gender"
             direction="horizontal"
           >
-            <van-radio name="1">男</van-radio>
-            <van-radio name="2">女</van-radio>
-            <van-radio name="0">保密</van-radio>
+            <van-radio :name="1">男</van-radio>
+            <van-radio :name="2">女</van-radio>
+            <van-radio :name="0">保密</van-radio>
           </van-radio-group>
         </template>
       </van-field>
