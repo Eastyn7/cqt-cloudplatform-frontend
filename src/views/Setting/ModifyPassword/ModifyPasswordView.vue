@@ -5,12 +5,10 @@ import { useUserStore } from '@/stores/index'
 
 // 定义响应式表单字段
 const formData = ref({
-  username: '',
-  studentId: '',
   emailPrefix: '',
-  verificationCode: '', // 添加邮箱验证码字段
-  password: '',
-  confirmPassword: ''
+  verificationCode: '',
+  oldPassword: '',
+  newPassword: ''
 })
 
 // 获取用户存储
@@ -21,24 +19,21 @@ const router = useRouter()
 
 // 验证规则
 const formRules: Record<string, FieldRule[]> = {
-  username: [
-    { required: true, message: '真实姓名不能为空', trigger: 'onBlur' }
-  ],
-  studentId: [
-    { required: true, message: '学号不能为空', trigger: 'onBlur' },
-    {
-      required: true,
-      pattern: /^\d{10}$/,
-      message: '学号必须为10位数字',
-      trigger: 'onBlur'
-    }
-  ],
   emailPrefix: [{ required: true, message: '邮箱不能为空', trigger: 'onBlur' }],
   verificationCode: [
     { required: true, message: '验证码不能为空', trigger: 'onBlur' }
   ],
-  password: [
-    { required: true, message: '密码不能为空', trigger: 'onBlur' },
+  oldPassword: [
+    { required: true, message: '旧密码不能为空', trigger: 'onBlur' },
+    {
+      required: true,
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      message: '密码至少8位，且必须包含大小写字母和数字',
+      trigger: 'onBlur'
+    }
+  ],
+  newPassword: [
+    { required: true, message: '新密码不能为空', trigger: 'onBlur' },
     {
       required: true,
       pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
@@ -50,17 +45,17 @@ const formRules: Record<string, FieldRule[]> = {
 
 // 自定义密码确认验证
 const validatePasswords = () => {
-  if (!formData.value.confirmPassword) {
+  if (!formData.value.newPassword) {
     showFailToast({
-      message: '请确认密码',
+      message: '请输入新密码',
       position: 'top',
       className: 'custom-fail-toast'
     })
     return false
   }
-  if (formData.value.password !== formData.value.confirmPassword) {
+  if (formData.value.oldPassword === formData.value.newPassword) {
     showFailToast({
-      message: '两次输入的密码不一致',
+      message: '旧密码和新密码不能一致',
       position: 'top',
       className: 'custom-fail-toast'
     })
@@ -115,7 +110,7 @@ const getVerificationCode = async () => {
   }
 }
 
-// 注册提交逻辑
+// 提交逻辑
 const onSubmitRegister = async () => {
   if (validatePasswords()) {
     const fullEmail = `${formData.value.emailPrefix}@ctbu.edu.cn`
@@ -130,18 +125,18 @@ const onSubmitRegister = async () => {
     }
 
     const reqData = {
-      username: formData.value.username,
-      student_id: formData.value.studentId,
+      auth_id: userStore.userInfo.auth_id,
       email: fullEmail,
       verificationCode: formData.value.verificationCode,
-      password: formData.value.password
+      oldPassword: formData.value.oldPassword,
+      newPassword: formData.value.newPassword
     }
 
     const jsonData = formToJson(reqData)
     try {
-      await userStore.register(jsonData)
+      await userStore.modifyPassword(jsonData)
       showSuccessToast({
-        message: '注册成功',
+        message: '修改成功',
         position: 'top',
         className: 'custom-normal-toast'
       })
@@ -160,21 +155,23 @@ const onSubmitRegister = async () => {
 <template>
   <div class="register-container">
     <img src="@/assets/images/透明队徽.png" alt="团队徽标" class="team-logo" />
-    <h1 class="title">注册新用户</h1>
+    <h1 class="title">修改密码</h1>
 
     <van-form @submit="onSubmitRegister" class="form-background">
       <van-field
-        v-model="formData.username"
-        label="真实姓名"
-        placeholder="请输入真实姓名（无法更改）"
-        :rules="formRules.username"
+        v-model="formData.oldPassword"
+        label="原始密码"
+        type="text"
+        placeholder="请输入原始密码"
+        :rules="formRules.oldPassword"
         required
       />
       <van-field
-        v-model="formData.studentId"
-        label="学号"
-        placeholder="请输入10位学号"
-        :rules="formRules.studentId"
+        v-model="formData.newPassword"
+        label="新密码"
+        type="text"
+        placeholder="请输入新密码"
+        :rules="formRules.newPassword"
         required
       />
       <van-field
@@ -210,31 +207,11 @@ const onSubmitRegister = async () => {
           </van-button>
         </template>
       </van-field>
-      <van-field
-        v-model="formData.password"
-        label="密码"
-        type="password"
-        placeholder="请输入密码"
-        :rules="formRules.password"
-        required
-      />
-      <van-field
-        v-model="formData.confirmPassword"
-        label="确认密码"
-        type="password"
-        placeholder="请再次输入密码"
-        required
-      />
-      <van-button round block type="primary" native-type="submit"
-        >注册</van-button
-      >
-    </van-form>
 
-    <p class="link-text">
-      已有账号？<router-link to="/login" class="router_link"
-        >去登录</router-link
-      >
-    </p>
+      <van-button round block type="primary" native-type="submit">
+        确认修改
+      </van-button>
+    </van-form>
   </div>
   <Divider dividerText="人工智能学院 “小红帽”常青藤青年志愿者服务队" />
 </template>
@@ -298,6 +275,7 @@ const onSubmitRegister = async () => {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);

@@ -3,7 +3,7 @@
 <template>
   <div>
     <!-- 队徽队名 -->
-    <HomeTeamName />
+    <TeamName />
   </div>
 </template>
 

@@ -2,7 +2,6 @@
 import type { FieldRule, FieldRuleValidator } from 'vant'
 import { formToJson } from '@/utils/formToJson'
 import { useUserStore } from '@/stores/index'
-import { useRouter } from 'vue-router'
 
 const loginInput = ref('') // 学号或邮箱
 const password = ref('') // 密码
@@ -85,9 +84,9 @@ const onSubmitLogin = async () => {
       className: 'custom-normal-toast'
     })
     router.push('/')
-  } catch (error) {
+  } catch (error: any) {
     showFailToast({
-      message: '登录失败，请重试',
+      message: error.response.data.message,
       position: 'top',
       className: 'custom-fail-toast'
     })

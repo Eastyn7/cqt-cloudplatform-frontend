@@ -115,6 +115,20 @@ export const useUserStore = defineStore(StoreNames.USER, {
         throw error
       }
     },
+    // 修改密码
+    async modifyPassword(data: string) {
+      try {
+        const result = await api.auth.modifyPassword(data)
+
+        if (result.status) {
+          // 修改成功，退出重新登录
+          this.logOut
+        }
+      } catch (error) {
+        console.error('修改密码失败', error)
+        throw error
+      }
+    },
     // 退出登录
     logOut() {
       // 清空 Pinia store 中的所有相关信息

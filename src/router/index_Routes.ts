@@ -49,6 +49,12 @@ const routes = [
     path: '/setting',
     name: 'Setting',
     component: () => import('@/views/Setting/SettingView.vue')
+  },
+  {
+    path: '/setting/modifypassword',
+    name: 'ModifyPassword',
+    component: () =>
+      import('@/views/Setting/ModifyPassword/ModifyPasswordView.vue')
   }
 ]
 

@@ -77,9 +77,9 @@ const onConfirm = ({
 <template>
   <div>
     <!-- 小公告 -->
-    <HomeNoticeBar :notification="notification" />
+    <NoticeBar :notification="notification" />
     <!-- 队徽队名 -->
-    <HomeTeamName />
+    <TeamName />
 
     <van-form @submit="onSubmit">
       <van-cell-group inset>

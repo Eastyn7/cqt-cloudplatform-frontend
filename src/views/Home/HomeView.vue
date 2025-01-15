@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import HomeSwipe from './components/HomeSwipe/index.vue'
+import HomeGrid from './components/HomeGrid/index.vue'
+
 // 定义一个响应式的文本变量，需要通过后端来控制文本内容，组件挂载（onMounted）时axios发请求
 const notification = ref<string>('内容待管理员更新...')
 </script>
@@ -8,9 +11,9 @@ const notification = ref<string>('内容待管理员更新...')
     <!-- 轮播图 -->
     <HomeSwipe />
     <!-- 小公告 -->
-    <HomeNoticeBar :notification="notification" />
+    <NoticeBar :notification="notification" />
     <!-- 队徽队名 -->
-    <HomeTeamName />
+    <TeamName />
     <!-- 功能表 -->
     <HomeGrid />
     <!-- 底线 -->

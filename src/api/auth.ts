@@ -53,6 +53,19 @@ const updateAuthInfo = async (data: string, needToken = true) => {
   }
 }
 
+// 修改密码
+const modifyPassword = async (data: string, needToken = true) => {
+  try {
+    const response = await http.put('/auth/modifypassword', data, {
+      needToken
+    } as CustomRequestConfig)
+    return response
+  } catch (error) {
+    console.error('修改密码失败：', error)
+    throw error
+  }
+}
+
 /**
  * 请求验证图片
  */
@@ -94,6 +107,7 @@ export default {
   register,
   getAuthInfo,
   updateAuthInfo,
+  modifyPassword,
   getVerifyImg,
   verifyAnswer
 }

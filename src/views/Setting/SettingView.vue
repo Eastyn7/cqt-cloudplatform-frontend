@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores'
-import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -52,11 +51,7 @@ const handleSettingClick = (message: string) => {
     <!-- 设置选项 -->
     <van-cell-group>
       <!-- 修改密码 -->
-      <van-cell
-        title="修改密码"
-        is-link
-        @click="handleSettingClick('修改密码功能正在开发中...')"
-      />
+      <van-cell title="修改密码" is-link to="/setting/modifypassword" />
 
       <!-- 通知设置 -->
       <van-cell

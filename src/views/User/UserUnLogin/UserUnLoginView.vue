@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-
-// 使用 Vue Router
 const router = useRouter()
 
 const menuItems = [

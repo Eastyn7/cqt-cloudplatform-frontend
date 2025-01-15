@@ -36,7 +36,7 @@
     "less-loader": "^12.2.0",
     "npm-run-all2": "^6.2.0",
     "pinia-plugin-persistedstate": "^4.0.0",
-    "postcss-px-to-viewport": "^1.1.1",
+    "postcss-px-to-viewport-8-plugin": "^1.2.5",
     "prettier": "^3.2.5",
     "typescript": "~5.4.0",
     "unplugin-auto-import": "^0.18.2",

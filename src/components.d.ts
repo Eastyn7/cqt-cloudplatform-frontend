@@ -8,13 +8,11 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Divider: typeof import('./components/Divider/index.vue')['default']
-    HomeGrid: typeof import('./components/HomeGrid/index.vue')['default']
-    HomeNoticeBar: typeof import('./components/HomeNoticeBar/index.vue')['default']
-    HomeSwipe: typeof import('./components/HomeSwipe/index.vue')['default']
-    HomeTeamName: typeof import('./components/HomeTeamName/index.vue')['default']
+    NoticeBar: typeof import('./components/NoticeBar/index.vue')['default']
     RotatingVerification: typeof import('./components/RotatingVerification/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TeamName: typeof import('./components/TeamName/index.vue')['default']
     VanButton: typeof import('vant/es')['Button']
     VanCard: typeof import('vant/es')['Card']
     VanCell: typeof import('vant/es')['Cell']

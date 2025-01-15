@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RobotVerification } from '@/app/RotatingVerification'
 import RotatingVerification from '@/components/RotatingVerification/index.vue'
-import { ref } from 'vue'
+
 const route = useRoute()
 const RotatingVerificationHandler =
   ref<InstanceType<typeof RotatingVerification>>()
