@@ -21,7 +21,7 @@ const teamMembers = ref([
     name: '杨诗瑞',
     role: '正队长',
     description: '杨诗瑞的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
+    photo: '/src/assets/images/1.jpg'
   },
   {
     id: 3,
@@ -35,14 +35,14 @@ const teamMembers = ref([
     name: '彭荟铭',
     role: '副队长',
     description: '彭荟铭的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
+    photo: '/src/assets/images/3.jpg'
   },
   {
     id: 5,
     name: '甘训荣',
     role: '副队长',
     description: '甘训荣的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
+    photo: '/src/assets/images/2.jpg'
   },
   {
     id: 6,
@@ -258,9 +258,14 @@ onMounted(() => {
               v-for="member in teamMembers.slice(0, 5)"
               :key="member.id"
               :title="`${member.role} - ${member.name}`"
-              :desc="member.description"
               :thumb="member.photo"
-            />
+            >
+              <template #desc>
+                <p>学号/职工号：{{ member.id }}</p>
+                <p>邮箱：{{ member.id }}</p>
+                <p>简介：{{ member.description }}</p>
+              </template>
+            </van-card>
           </van-swipe-item>
 
           <!-- 第二页 办公室 -->
