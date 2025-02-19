@@ -1,0 +1,8 @@
+/* viewportFit.css */
+/* 适配 iphone 底部安全区（指示条，配合index.html <meta name="viewport" ... />使用 */
+@supports (bottom: env(safe-area-inset-bottom)){
+    #app {
+        padding-bottom: constant(safe-area-inset-bottom);/* 兼容ios<11.2 */
+        padding-bottom: env(safe-area-inset-bottom);/* 兼容ios>=11.2 */
+    }
+}

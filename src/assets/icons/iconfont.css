@@ -1,0 +1,85 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 4677656 */
+  /* Color fonts */
+  src: 
+       url('iconfont.woff2?t=1725883012016') format('woff2'),
+       url('iconfont.woff?t=1725883012016') format('woff'),
+       url('iconfont.ttf?t=1725883012016') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-volunteer-avatar:before {
+  content: "\e602";
+}
+
+.icon-setting:before {
+  content: "\e660";
+}
+
+.icon-default-avatar:before {
+  content: "\e635";
+}
+
+.icon-operating-guide:before {
+  content: "\e71d";
+}
+
+.icon-personal-data:before {
+  content: "\f812";
+}
+
+.icon-volunteer-girl:before {
+  content: "\e612";
+}
+
+.icon-volunteer-boy:before {
+  content: "\e619";
+}
+
+.icon-volunteers:before {
+  content: "\e634";
+}
+
+.icon-great-activities:before {
+  content: "\e600";
+}
+
+.icon-campus-service:before {
+  content: "\e633";
+}
+
+.icon-permission-application:before {
+  content: "\e686";
+}
+
+.icon-signup-activities:before {
+  content: "\e664";
+}
+
+.icon-voluntary-service:before {
+  content: "\e60e";
+}
+
+.icon-campus-information:before {
+  content: "\e63a";
+}
+
+.icon-about-us:before {
+  content: "\fbd2";
+}
+
+.icon-feedback:before {
+  content: "\e606";
+}
+
+.icon-love-umbrella:before {
+  content: "\e603";
+}
+
