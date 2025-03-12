@@ -20,6 +20,11 @@ const routes = [
     component: () => import('@/views/SignUp/SignUpView.vue')
   },
   {
+    path: '/apply/:id',
+    name: 'Apply',
+    component: () => import('@/views/SignUp/ApplyActivity.vue')
+  },
+  {
     path: '/aboutus',
     name: 'AboutUs',
     component: () => import('@/views/AboutUs/AboutUsView.vue')

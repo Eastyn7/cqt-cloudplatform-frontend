@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useTeamStore } from '@/stores/modules/teamInfo'
+
+const useTeam = useTeamStore()
+
 // 存储从后端获取的文本
 const defaultDescription = ref(
   `重庆工商大学人工智能学院“小红帽”常青藤青年志愿者服务队（青队）是一支热情洋溢的志愿团队。其架构清晰，含队长团、部长团及干事层，下设办公室、组织部、宣传部、外联部、网络部及特色公益项目组。各部门协同合作，确保团队工作顺畅。
@@ -6,178 +10,54 @@ const defaultDescription = ref(
 )
 
 const description = ref('')
-
-const teamMembers = ref([
-  {
-    id: 1,
-    name: '向巧',
-    role: '指导老师',
-    description:
-      '向巧老师的简介。向巧老师在教学和志愿服务方面有丰富经验，热心帮助学生成长。',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 2,
-    name: '杨诗瑞',
-    role: '正队长',
-    description: '杨诗瑞的简介',
-    photo: '/src/assets/images/1.jpg'
-  },
-  {
-    id: 3,
-    name: '胡敬铃',
-    role: '副队长',
-    description: '学号：2022413492；分管部门：组织部、网络部；职能：',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 4,
-    name: '彭荟铭',
-    role: '副队长',
-    description: '彭荟铭的简介',
-    photo: '/src/assets/images/3.jpg'
-  },
-  {
-    id: 5,
-    name: '甘训荣',
-    role: '副队长',
-    description: '甘训荣的简介',
-    photo: '/src/assets/images/2.jpg'
-  },
-  {
-    id: 6,
-    name: '徐昌菊',
-    role: '办公室主任',
-    description: '徐昌菊的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 7,
-    name: '赵宏博',
-    role: '办公室主任',
-    description: '赵宏博的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 8,
-    name: '孙盈盈',
-    role: '办公室主任',
-    description: '孙盈盈的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 9,
-    name: '丁雪晴',
-    role: '组织部部长',
-    description: '丁雪晴的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 10,
-    name: '覃黔川',
-    role: '组织部部长',
-    description: '覃黔川的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 11,
-    name: '孟琳佩',
-    role: '组织部部长',
-    description: '孟琳佩的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 12,
-    name: '焦健雄',
-    role: '外联部部长',
-    description: '焦健雄的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 13,
-    name: '吴珍屿',
-    role: '外联部部长',
-    description: '吴珍屿的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 14,
-    name: '周敏',
-    role: '外联部部长',
-    description: '周敏的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 15,
-    name: '雷兴易',
-    role: '网络部部长',
-    description: '雷兴易的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 16,
-    name: '彭虹',
-    role: '网络部部长',
-    description: '彭虹的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 17,
-    name: '叶心语',
-    role: '网络部部长',
-    description: '叶心语的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 18,
-    name: '王海南',
-    role: '新闻中心部长',
-    description: '王海南的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 19,
-    name: '陈桥',
-    role: '新闻中心部长',
-    description: '陈桥的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 20,
-    name: '蔡冰冰',
-    role: '新闻中心部长',
-    description: '蔡冰冰的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 21,
-    name: '田稳静',
-    role: '未来探索公益项目组部长',
-    description: '田稳静的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  },
-  {
-    id: 22,
-    name: '吴凯',
-    role: '未来探索公益项目组部长',
-    description: '吴凯的简介',
-    photo: 'https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg'
-  }
-])
-
+const teamMembers = ref([])
+const groupedMembers = ref<Record<number, any[]>>({})
 const activeNames = ref<string[]>([]) // 折叠项控制
 
 // 转换换行符为 <p> 标签的函数，并加上缩进
 const convertNewlinesToParagraphs = (text: string): string => {
-  const paragraphs = text
+  return text
     .split('\n')
     .map((paragraph) => `<p style="text-indent: 4ch;">${paragraph}</p>`)
     .join('')
-  return paragraphs
 }
 
-onMounted(() => {
+// 按部门分类成员的函数
+const groupMembersByDepartment = () => {
+  const grouped: Record<number, any[]> = {}
+  teamMembers.value.forEach((member: any) => {
+    const departmentId = Number(member.department_id) // 确保是数字
+    if (!grouped[departmentId]) {
+      grouped[departmentId] = []
+    }
+    grouped[departmentId].push(member)
+  })
+  groupedMembers.value = grouped // 更新 ref 变量
+}
+
+onMounted(async () => {
   description.value = convertNewlinesToParagraphs(defaultDescription.value)
+  try {
+    const result = await useTeam.getBackbonesInfo()
+    if (result) {
+      teamMembers.value = result.members.map((member: any) => ({
+        id: member.student_id,
+        name: member.username,
+        role: member.role_name,
+        department_id: Number(member.department_id),
+        description: member.description,
+        photo: member.photo
+      }))
+      groupMembersByDepartment() // 获取数据后手动调用分类函数
+    }
+  } catch (err) {
+    console.error('获取成员信息失败', err)
+    showFailToast({
+      message: '获取成员信息失败',
+      position: 'top',
+      className: 'custom-fail-toast'
+    })
+  }
 })
 </script>
 
@@ -250,89 +130,45 @@ onMounted(() => {
           现任团队重要成员
         </van-divider>
 
-        <!-- 滑动翻页效果 -->
         <van-swipe :auto-play="false" style="width: 100%; height: auto">
-          <!-- 第一页 -->
-          <van-swipe-item>
+          <van-swipe-item
+            v-if="groupedMembers[1]?.length || groupedMembers[2]?.length"
+          >
             <van-card
-              v-for="member in teamMembers.slice(0, 5)"
+              v-for="member in [
+                ...(groupedMembers[1] || []),
+                ...(groupedMembers[2] || [])
+              ]"
               :key="member.id"
               :title="`${member.role} - ${member.name}`"
               :thumb="member.photo"
             >
               <template #desc>
                 <p>学号/职工号：{{ member.id }}</p>
-                <p>邮箱：{{ member.id }}</p>
                 <p>简介：{{ member.description }}</p>
               </template>
             </van-card>
           </van-swipe-item>
 
-          <!-- 第二页 办公室 -->
-          <van-swipe-item>
-            <van-card
-              v-for="member in teamMembers.slice(5, 8)"
-              :key="member.id"
-              :title="`${member.role} - ${member.name}`"
-              :desc="member.description"
-              :thumb="member.photo"
-            />
-          </van-swipe-item>
-
-          <!-- 第三页 组织部 -->
-          <van-swipe-item>
-            <van-card
-              v-for="member in teamMembers.slice(8, 11)"
-              :key="member.id"
-              :title="`${member.role} - ${member.name}`"
-              :desc="member.description"
-              :thumb="member.photo"
-            />
-          </van-swipe-item>
-
-          <!-- 第四页 外联部 -->
-          <van-swipe-item>
-            <van-card
-              v-for="member in teamMembers.slice(11, 14)"
-              :key="member.id"
-              :title="`${member.role} - ${member.name}`"
-              :desc="member.description"
-              :thumb="member.photo"
-            />
-          </van-swipe-item>
-
-          <!-- 第五页 网络部 -->
-          <van-swipe-item>
-            <van-card
-              v-for="member in teamMembers.slice(14, 17)"
-              :key="member.id"
-              :title="`${member.role} - ${member.name}`"
-              :desc="member.description"
-              :thumb="member.photo"
-            />
-          </van-swipe-item>
-
-          <!-- 第六页 新闻中心 -->
-          <van-swipe-item>
-            <van-card
-              v-for="member in teamMembers.slice(17, 20)"
-              :key="member.id"
-              :title="`${member.role} - ${member.name}`"
-              :desc="member.description"
-              :thumb="member.photo"
-            />
-          </van-swipe-item>
-
-          <!-- 第七页 未来探索公益项目组 -->
-          <van-swipe-item>
-            <van-card
-              v-for="member in teamMembers.slice(20, 22)"
-              :key="member.id"
-              :title="`${member.role} - ${member.name}`"
-              :desc="member.description"
-              :thumb="member.photo"
-            />
-          </van-swipe-item>
+          <!-- 其他部门（department_id > 2）的成员 -->
+          <template
+            v-for="(members, departmentId) in groupedMembers"
+            :key="departmentId"
+          >
+            <van-swipe-item v-if="departmentId > 2">
+              <van-card
+                v-for="member in members"
+                :key="member.id"
+                :title="`${member.role} - ${member.name}`"
+                :thumb="member.photo"
+              >
+                <template #desc>
+                  <p>学号/职工号：{{ member.id }}</p>
+                  <p>简介：{{ member.description }}</p>
+                </template>
+              </van-card>
+            </van-swipe-item>
+          </template>
         </van-swipe>
       </section>
 
@@ -346,58 +182,97 @@ onMounted(() => {
         <div class="activity-list">
           <div class="activity-item">
             <img
-              src="@/assets/images/duiqi.jpg"
+              src="@/assets/images/爱心雨伞.png"
               alt="爱心雨伞"
               class="activity-image"
             />
-            <h3>爱心雨伞</h3>
-            <p>
-              爱心雨伞志愿者活动以“伞下的回眸，是爱心的滋养”为主题，在各教学楼门口及重要交通节点设置借还点，利用小程序管理雨伞借还。活动定期开展，包括宣传教育、检查维护和收集反馈等内容，旨在解决师生雨天出行难题，培养诚信意识，营造关爱文化。
+            <h3>🌂爱心雨伞活动——办公室</h3>
+            <p class="description">
+              南岸校区的 12 个伞站里，800 + 把印着"青队"LOGO
+              的爱心雨伞随时待命。扫码即取的智能借还，让骤雨突至的师生免于奔逃
+              ——
+              图书馆北门前，被雨困住的老教授曾说："伞柄的防滑纹，比天气预报更暖。"
+              三年流转数据显示，92% 的伞具被归还时带着体温，18%
+              的伞里夹着感谢便签。这场静默的守护，让青队的爱心雨伞成为校园雨天最安心的注脚。
             </p>
           </div>
           <div class="activity-item">
             <img
-              src="@/assets/images/duiqi.jpg"
+              src="@/assets/images/向日葵基地活动.jpg"
               alt="向日葵基地"
               class="activity-image"
             />
-            <h3>向日葵基地</h3>
-            <p>
-              向日葵基地志愿服务活动于 2024
-              年秋期每单周周五下午在重庆市南岸区开展。志愿者陪伴孩子玩益智玩具、识字，参与社会融合及进行编程培训。活动旨在关爱孩子、促进交流、提升志愿者意识并引起社会对特殊儿童的关注。
+            <h3>🌻向日葵基地活动——外联部</h3>
+            <p class="description">
+              面向自闭症儿童的活动室里，青队志愿者发明
+              "非语言沟通包"：情绪积木、绘画猜心卡、触感故事书。孩子们用蜡笔涂抹的星空、用黏土捏的月亮，被收集成
+              "星星的礼物"
+              公益展。最动人的瞬间，是一个男孩突然把自己的拼图推给志愿者 ——
+              这是他三个月来第一次主动分享。三年间，27 个 "星星的孩子"
+              在这里打开心门，青队的橙色，成为他们星球上温暖的坐标。
             </p>
           </div>
           <div class="activity-item">
             <img
-              src="@/assets/images/duiqi.jpg"
-              alt="一天门社区青少年活动中心"
+              src="@/assets/images/一天门社区.jpg"
+              alt="一天门社区"
               class="activity-image"
             />
-            <h3>一天门社区青少年活动中心</h3>
-            <p>
-              一天门社区青少年活动中心志愿者活动以“启智未来，智慧同行”为主题，在重庆市南岸区开展。活动包括物理实验、编程入门等内容，旨在普及科学知识、培养创新精神，为孩子们提供交流平台，激发探索兴趣。
+            <h3>🔬一天门社区——组织部</h3>
+            <p class="description">
+              社区活动室的白墙上，贴满孩子们的实验手账：用可乐瓶做的
+              "彩虹瀑布"、锡纸折的 "太阳能小车"。青队志愿者设计 "知识盲盒 +
+              动手工坊"，把物理现象变成看得见的游戏，编程逻辑化作闯关任务。最受欢迎的
+              "空气大炮" 实验，让五年级男孩第一次惊呼："原来空气会打拳！"
+              累计服务 1200 + 人次的科普角，让青队的橙色马甲成为孩子们眼中
+              "会变魔术的颜色"。
             </p>
           </div>
           <div class="activity-item">
             <img
-              src="@/assets/images/duiqi.jpg"
-              alt="一天门社区养老院"
+              src="@/assets/images/PSPRPPT.jpg"
+              alt="PSPRPPT"
               class="activity-image"
             />
-            <h3>一天门社区养老院</h3>
-            <p>
-              一天门社区养老院志愿者活动以“关爱夕阳，温暖同行”为主题，在重庆市南岸区该养老院开展。活动内容包括日常陪伴、生活照料、文化娱乐和环境美化等。旨在关爱老人、传承美德、增进沟通、提升志愿者能力。
+            <h3>🎨PSPRPPT——网络部</h3>
+            <p class="description">
+              机房里，青队技能组把服务故事变成 PPT
+              动效，将老人的回忆剪成纪录片，用海报设计传递环保理念。"好的志愿展示，要让观众看见心跳。"
+              这句标语贴在每台电脑上。累计培训 200 + 人次的技能课，产出 2000 +
+              张公益海报、100 + 部短片，其中 "时光相册"
+              系列让校志愿大赛评委动容："技术有温度，公益才会被记住。"
             </p>
           </div>
           <div class="activity-item">
             <img
-              src="@/assets/images/duiqi.jpg"
-              alt="技能培训"
+              src="@/assets/images/科普.png"
+              alt="科普"
               class="activity-image"
             />
-            <h3>技能培训</h3>
-            <p>
-              该活动由青队网络部承办，专注于提供Photoshop（PS）、Premiere（PR）和PowerPoint（PPT）技能培训，旨在帮助青队成员提升数字媒体处理能力。通过技能培训和实践操作，学员可以学习到图像编辑、视频制作和演示设计技巧。
+            <h3>🔭科普——公益项目组</h3>
+            <p class="description">
+              走进 8 所小学的 "实验盲盒车"，装着空气大炮、编程闯关卡、AI 机器人
+              "豆包"。青队志愿者把物理原理变成好玩的游戏：保鲜膜 +
+              塑料桶的气浪冲击，Scratch
+              代码指挥的豌豆射手，让孩子们惊呼："科学比动画片还酷！"
+              每个盲盒附带的彩虹瓶材料包，让知识从课堂延伸到家庭。1500 +
+              双眼睛因橙色马甲亮起的星光，是科普最动人的注脚。
+            </p>
+          </div>
+          <div class="activity-item">
+            <img
+              src="@/assets/images/河小清.jpg"
+              alt="科普"
+              class="activity-image"
+            />
+            <h3>🌊河小清——新闻中心</h3>
+            <p class="description">
+              花溪河畔的 20
+              个水质监测点，记录着青队志愿者的弯腰瞬间：打捞塑料袋的夹子、救助迷路小鸭子的网兜、收集落叶的橙色垃圾袋。"清洁
+              + 科普" 双模式下，孩子们用显微镜观察水样，居民在 "河流故事会"
+              里拼出生态地图。三年清理 15 公里河道，带走 2
+              吨垃圾，留下的不仅是碧水，更是 "环保不是口号，是弯腰的本能"
+              的共识。
             </p>
           </div>
         </div>
