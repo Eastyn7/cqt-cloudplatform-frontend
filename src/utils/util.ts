@@ -29,10 +29,9 @@ export const removeLocalData = (key: string) => {
 export const isLogin = (): boolean => {
   // 从本地存储中获取用户信息
   const user = getLocalData('cqt-user')
-  const tokenExpiresAt = user?.tokenExpiresAt // 获取过期时间
 
   // 检查用户信息和Token是否存在，且是否未过期
-  if (user?.token && tokenExpiresAt && Date.now() < tokenExpiresAt) {
+  if (user?.token) {
     return true // 登录有效
   }
 

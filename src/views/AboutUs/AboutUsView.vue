@@ -311,7 +311,7 @@ onMounted(async () => {
 }
 
 .activity-item {
-  width: 300px;
+  width: 100%;
 }
 
 .activity-image {

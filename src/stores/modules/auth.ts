@@ -31,7 +31,6 @@ export const useUserStore = defineStore(StoreNames.USER, {
       bio: ''
     },
     token: '',
-    tokenExpiresAt: 0,
     isAdmin: false,
     Permission: ''
   }),
@@ -56,17 +55,13 @@ export const useUserStore = defineStore(StoreNames.USER, {
     async login(data: string) {
       try {
         const result = await api.auth.login(data)
-        const { auth_id, student_id, email, token, expiresIn } =
-          result.data.auth
+        const { auth_id, student_id, email, token } = result.data.auth
 
         // 存储 token 和用户认证信息
         this.token = token
         this.userInfo.auth_id = auth_id
         this.userInfo.studentId = student_id
         this.userInfo.email = email
-
-        // 计算 token 的过期时间
-        this.tokenExpiresAt = Date.now() + expiresIn * 1000
 
         // 登录成功后获取用户信息
         const jsonData = formToJson({ auth_id })
@@ -133,7 +128,6 @@ export const useUserStore = defineStore(StoreNames.USER, {
     logOut() {
       // 清空 Pinia store 中的所有相关信息
       // this.token = ''
-      // this.tokenExpiresAt = 0
       // this.isAdmin = false
       // this.Permission = ''
       // this.userInfo = {
@@ -153,6 +147,34 @@ export const useUserStore = defineStore(StoreNames.USER, {
 
       // 强制刷新页面，确保状态更新
       location.reload()
+    },
+
+    // 借伞
+    async borrowUmbrella(code: string) {
+      try {
+        const jsonData = formToJson({ auth_id: this.userInfo.auth_id, code })
+        const result = await api.umbrella.borrowUmbrella(jsonData)
+
+        if (result.status) {
+          return '借伞成功'
+        }
+      } catch (error) {
+        console.error('借伞失败', error)
+        throw error
+      }
+    },
+    // 还伞
+    async returnUmbrella(code: string) {
+      try {
+        const jsonData = formToJson({ auth_id: this.userInfo.auth_id, code })
+        const result = await api.umbrella.returnUmbrella(jsonData)
+        if (result.status) {
+          return '还伞成功'
+        }
+      } catch (error) {
+        console.error('还伞失败', error)
+        throw error
+      }
     }
   }
 })

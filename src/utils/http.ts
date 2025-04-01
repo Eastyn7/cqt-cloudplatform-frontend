@@ -54,10 +54,17 @@ http.interceptors.response.use(
     return response.data // 返回响应的 data 部分
   },
   (error) => {
-    // 如果响应状态码为 401，说明 token 无效或已过期
-    if (error.response && error.response.status === 401) {
+    // 如果响应状态码为 401 和 403，说明 token 无效或已过期
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 403)
+    ) {
       console.warn('登录已过期，请重新登录')
-
+      showFailToast({
+        message: '身份认证失效',
+        position: 'top',
+        className: 'custom-fail-toast'
+      })
       // 清除本地用户信息并重定向到登录页
       removeLocalData('cqt-user')
       router.replace('/login')

@@ -92,6 +92,7 @@
     "useId": true,
     "useModel": true,
     "useTemplateRef": true,
-    "showConfirmDialog": true
+    "showConfirmDialog": true,
+    "showDialog": true
   }
 }
